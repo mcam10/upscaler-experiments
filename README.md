@@ -1,7 +1,7 @@
 ## Basic setup real quick
 
 ## i use venv
-python -m upscaler
+python -m upscaler-code
 
 ## 
 chmod +x build_pip_package.sh
