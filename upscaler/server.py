@@ -60,26 +60,13 @@ def main(args, ):
         time_start = time.time()
         # TODO: handle batching
 #        print(request.stream)
-#        data_as_dictionary = json.loads(json.loads(request.files['file'].read().decode('utf-8')))
+
         image = request.files['file']
         image_name = image.filename
         image.save(os.path.join(app.config['PUBLIC_PATH'],image_name))
         image_path = os.path.join(app.config['PUBLIC_PATH'],image_name)
         with open(image_path, 'rb') as f:
             contents = f.read()
-        print(contents)
-        
-#        image = request.files['file'].read()
-#        img_base64 = base64.b64decode(request.files['file'])
-#        img_base64 = base64.b64encode(image.read()).decode('utf-8')
-#        image_name = image.filename
-#        image.save(os.path.join(app.config['PUBLIC_PATH'],image_name))
-#        image_path = os.path.join(app.config['PUBLIC_PATH'],image_name)
-#        img_base64 = base64.b64encode(image.read()).decode('utf-8')
-
-#        with open(image_path, 'rb') as f:
-#            encoded = base64.b64.encode(image_data = f.read())
-            #            img_base64  = base64.b64encode(f.read()).decode('utf-8')
 
         img_base64_list = [contents]
         num_imgs = len(img_base64_list)
