@@ -2,6 +2,8 @@ import argparse
 import base64
 import io
 import time
+import os
+import json
 
 import torch
 import torchvision
@@ -32,6 +34,10 @@ esrgan_config = ESRGANConfig(
 )
 esrgan = ESRGAN(esrgan_config, )
 
+PUBLIC_PATH= 'public'
+
+app.config['PUBLIC_PATH'] = PUBLIC_PATH
+
 
 def to_binary(image, ):
     buffered = io.BytesIO()
@@ -49,13 +55,33 @@ def main(args, ):
     def upscale():
         print(
             "REQ",
-            request.form,
+            request.files['file'],
         )
         time_start = time.time()
         # TODO: handle batching
-        img_base64 = base64.b64decode(request.form['image'])
+#        print(request.stream)
+#        data_as_dictionary = json.loads(json.loads(request.files['file'].read().decode('utf-8')))
+        image = request.files['file']
+        image_name = image.filename
+        image.save(os.path.join(app.config['PUBLIC_PATH'],image_name))
+        image_path = os.path.join(app.config['PUBLIC_PATH'],image_name)
+        with open(image_path, 'rb') as f:
+            contents = f.read()
+        print(contents)
+        
+#        image = request.files['file'].read()
+#        img_base64 = base64.b64decode(request.files['file'])
+#        img_base64 = base64.b64encode(image.read()).decode('utf-8')
+#        image_name = image.filename
+#        image.save(os.path.join(app.config['PUBLIC_PATH'],image_name))
+#        image_path = os.path.join(app.config['PUBLIC_PATH'],image_name)
+#        img_base64 = base64.b64encode(image.read()).decode('utf-8')
 
-        img_base64_list = [img_base64]
+#        with open(image_path, 'rb') as f:
+#            encoded = base64.b64.encode(image_data = f.read())
+            #            img_base64  = base64.b64encode(f.read()).decode('utf-8')
+
+        img_base64_list = [contents]
         num_imgs = len(img_base64_list)
 
         img_tensor_list = []
